@@ -6,9 +6,10 @@ const { validateUser } = require('../validations/userValidation');
 // const { createUser, getUser, updateUser, deleteUser } = require('../controllers/userController');
 
 // GET all users
-router.get('/', authMiddleware, userController.getAllUsers);
+// router.get('/', authMiddleware, userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 
 // POST create user
-router.post('/', authMiddleware, validateUser, userController.createUser);
+// router.post('/', authMiddleware, validateUser, userController.createUser);
 
 module.exports = router;

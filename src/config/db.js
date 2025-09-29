@@ -17,7 +17,7 @@ const connectDB = async () => {
     await Telemetry.createTimeSeriesCollection();
     logger.info('✅ Time-series collection ensured');
   } catch (err) {
-    logger.error(err.message);
+    logger.error('❌ Error ensuring time-series collection:', err.message);
     process.exit(1);
   }
 };
