@@ -1,1 +1,0 @@
-error: BSON field 'create.timeseries.metaField' is the wrong type 'object', expected type 'string'
