@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const RefreshTokenSchema = require('./RefreshToken');
 
 const UserSchema = new Schema(
   {

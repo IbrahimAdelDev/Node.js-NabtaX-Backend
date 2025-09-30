@@ -7,6 +7,6 @@ exports.getAllUsers = async () => {
     return users;
   } catch (error) {
     logger.error('❌ Error fetching users:', error);
-    throw new Error('Error fetching users: ' + error.message);
+    throw new Error('Error fetching users');
   }
 };

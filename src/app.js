@@ -1,17 +1,22 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const compression = require('compression');
 const cors = require('cors');
 
 const indexRouter = require('./routes/index');
+const apiLimiter = require('./middlewares/rateLimiter');
 const { logger } = require('./config/logger');
 
 const { FRONTEND_URL } = require('./config/env');
-const { errorHandler } = require('./middlewares/errorHandler');
+const errorHandler = require('./middlewares/errorHandler');
 
 
 const app = express();
 
 
+app.use(helmet());
+app.use(compression());
 app.use(express.json());
 app.use(cookieParser());
 
@@ -29,12 +34,12 @@ app.use(cookieParser());
 //   credentials: true,
 // }));
 
-app.use("/api/v1", indexRouter);
+app.use("/api/v1", apiLimiter, indexRouter);
 
 app.use('/', (req, res) => {
   res.send('Hello World!');
 });
 
-// app.use(errorHandler);
+app.use(errorHandler);
 
 module.exports = app;

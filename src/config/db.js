@@ -1,23 +1,18 @@
 const mongoose = require('mongoose');
-
 const { logger } = require('../config/logger');
-const Telemetry = require('../models/Telemetry');
-
+const ensureTelemetryTimeSeriesCollection = require('../models/ensureTelemetryTS');
 const { DATABASE_URL } = require('./env');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(DATABASE_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(DATABASE_URL);
     logger.info('✅ MongoDB connected successfully');
-    
-    // Ensure time-series collection for Telemetry
-    await Telemetry.createTimeSeriesCollection();
+
+    // تأكد من وجود time-series collection
+    await ensureTelemetryTimeSeriesCollection();
     logger.info('✅ Time-series collection ensured');
   } catch (err) {
-    logger.error('❌ Error ensuring time-series collection:', err.message);
+    logger.error('❌ Error ensuring time-series collection:', err);
     process.exit(1);
   }
 };

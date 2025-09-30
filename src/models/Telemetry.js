@@ -1,86 +1,57 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+// Schema عادي للتعامل مع collection بعد إنشائها
 const TelemetrySchema = new Schema({
-  deviceId:
-  {
-    type: Schema.Types.ObjectId,
-    ref: 'Device',
+  timestamp: {
+    type: Date,
+    default: Date.now,
     required: true
   },
-  stageId:
-  {
-    type: Schema.Types.ObjectId,
-    ref: 'Stage',
-    required: true
-  },
-  sensorId:
-  {
-    type: Schema.Types.ObjectId,
-    ref: 'Sensor',
-    required: true
-  },
-  ts:
-  {
+  received_at: {
     type: Date,
     default: Date.now
   },
-  value:
-  {
+  value: {
     type: Number,
     required: true
   },
-  unit:
-  {
+  unit: {
     type: String,
     enum: ['C', 'F', '%', 'pH', 'mS/cm'],
     required: true
   },
-  meta:
-  {
-    deviceId:
-    {
+  metadata: {
+    deviceId: {
       type: Schema.Types.ObjectId,
       ref: 'Device',
       required: true
     },
-    stageId:
-    {
+    stageId: {
       type: Schema.Types.ObjectId,
       ref: 'Stage',
       required: true
     },
-    sensorId:
-    {
+    sensorId: {
       type: Schema.Types.ObjectId,
       ref: 'Sensor',
       required: true
     }
   }
-}, { versionKey: false });
-TelemetrySchema.index({ deviceId: 1 });
-TelemetrySchema.index({ stageId: 1 });
-TelemetrySchema.index({ sensorId: 1 });
+}, { 
+  timeseries: {
+    timeField: 'timestamp',
+    metaField: 'metadata',
+    granularity: 'seconds'
+  },
+  expireAfterSeconds: 60 * 60 * 24 * 365, 
+  timestamps: true
+});
 
-
-TelemetrySchema.statics.createTimeSeriesCollection = async function () {
-  const conn = mongoose.connection;
-  const collections = await conn.db.listCollections({ name: 'telemetries' }).toArray();
-  
-  if (collections.length === 0) {
-    await conn.db.createCollection('telemetries', {
-      timeseries: {
-        timeField: 'ts',       // العمود الزمني
-        metaField: {
-          deviceId: 'deviceId',
-          stageId: 'stageId',
-          sensorId: 'sensorId'
-        },
-        granularity: 'seconds' 
-      },
-      expireAfterSeconds: 60 * 60 * 24 * 365 
-    });
-  }
-};
+// Indexes لتسريع الاستعلامات
+TelemetrySchema.index({ 'metadata.deviceId': 1 });
+TelemetrySchema.index({ 'metadata.stageId': 1 });
+TelemetrySchema.index({ 'metadata.sensorId': 1 });
+TelemetrySchema.index({ timestamp: 1 });
 
 module.exports = mongoose.model('Telemetry', TelemetrySchema, 'telemetries');
