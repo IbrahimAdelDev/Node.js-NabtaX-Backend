@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
-const { level } = require('winston');
 const { Schema } = mongoose;
+const PlantSchema = require('./Plant');
 
 const StageSchema = new Schema({
+  gardenId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Garden',
+    required: true
+  },
   deviceId: {
     type: Schema.Types.ObjectId,
     ref: 'Device',
@@ -30,6 +35,20 @@ const StageSchema = new Schema({
     type: Number,
     default: 1
   },
+  QRCode: {
+    id: {
+      type: String,
+      unique: true,
+      sparse: true
+    },
+    imageUrl: {
+      type: String
+    }
+  },
+  plants: {
+    type: [PlantSchema],
+    default: []
+  }
 }, { timestamps: true });
 StageSchema.index({ deviceId: 1 });
 

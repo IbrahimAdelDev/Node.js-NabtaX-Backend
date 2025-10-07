@@ -18,10 +18,13 @@ const ActuatorSchema = new Schema({
   type: {
     type: String,
     enum: ['heater', 'cooler', 'pump', 'led', 'valve'],
+    required: true
   },
   name: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    maxlength: 64
   },
   state: {
     type: String,

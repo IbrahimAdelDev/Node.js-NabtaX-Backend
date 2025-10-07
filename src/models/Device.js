@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const DeviceSchema = new Schema({
-  userId:
-  {
+  ownerId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
@@ -38,23 +37,9 @@ const DeviceSchema = new Schema({
     type: String,
     required: true
   },
-  manufacturer: String,
-  location: {
-    country: {
-      type: String,
-      trim: true,
-      maxlength: 32
-    },
-    city: {
-      type: String,
-      trim: true,
-      maxlength: 32
-    },
-    address: {
-      type: String,
-      trim: true,
-      maxlength: 64
-    },
+  manufacturer: {
+    type: String,
+    required: true
   },
   status: {
     type: String,
