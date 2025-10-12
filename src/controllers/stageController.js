@@ -2,7 +2,7 @@ const stageService = require('../services/stageService');
 
 exports.getAllStages = async (req, res) => {
   try {
-    const stages = await stageService.getAll();
+    const stages = await stageService.getAllStages();
     res.status(200).json(stages);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -11,7 +11,7 @@ exports.getAllStages = async (req, res) => {
 
 exports.getStageById = async (req, res) => {
   try {
-    const stage = await stageService.getById(req.params.id);
+    const stage = await stageService.getStageById(req.params.id);
     if (!stage) return res.status(404).json({ message: 'Stage not found' });
     res.status(200).json(stage);
   } catch (error) {
@@ -21,7 +21,7 @@ exports.getStageById = async (req, res) => {
 
 exports.createStage = async (req, res) => {
   try {
-    const newStage = await stageService.create(req.body);
+    const newStage = await stageService.createStage(req.body);
     res.status(201).json(newStage);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -30,7 +30,7 @@ exports.createStage = async (req, res) => {
 
 exports.updateStage = async (req, res) => {
   try {
-    const updatedStage = await stageService.update(req.params.id, req.body);
+    const updatedStage = await stageService.updateStage(req.params.id, req.body);
     if (!updatedStage) return res.status(404).json({ message: 'Stage not found' });
     res.status(200).json(updatedStage);
   } catch (error) {
@@ -40,7 +40,7 @@ exports.updateStage = async (req, res) => {
 
 exports.deleteStage = async (req, res) => {
   try {
-    const deleted = await stageService.delete(req.params.id);
+    const deleted = await stageService.deleteStage(req.params.id);
     if (!deleted) return res.status(404).json({ message: 'Stage not found' });
     res.status(200).json({ message: 'Stage deleted successfully' });
   } catch (error) {

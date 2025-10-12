@@ -4,10 +4,11 @@ const Device = require('../models/Device');
 // 🟢 Get all devices
 async function getAllDevices() {
   return await Device.find()
-    .populate('userId', 'username email')
+    .populate('ownerId', 'username email')
     .populate('productId', 'name model code')
     .populate('sensors', 'type unit')
-    .populate('actuators', 'name type state');
+    .populate('actuators', 'name type state')
+    .populate('gardenId', 'name location');
 }
 
 // 🟢 Get device by ID
@@ -16,7 +17,8 @@ async function getDeviceById(id) {
     .populate('userId', 'username email')
     .populate('productId', 'name model code')
     .populate('sensors', 'type unit')
-    .populate('actuators', 'name type state');
+    .populate('actuators', 'name type state')
+    .populate('gardenId', 'name location');
 
   if (!device) {
     const error = new Error('Device not found');
