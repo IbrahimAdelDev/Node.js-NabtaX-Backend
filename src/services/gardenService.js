@@ -14,7 +14,18 @@ class GardenService {
       .populate('engineers')
       .populate('workers')
       .populate('devices')
-      .populate('sprinklers')
+      // .populate('sprinklers')
+      .populate('stages');
+  }
+
+  // Get Gardens by Owner ID
+  async getGardensByOwnerId(ownerId) {
+    return await Garden.find({ ownerId })
+      .populate('ownerId')
+      .populate('engineers')
+      .populate('workers')
+      .populate('devices')
+      // .populate('sprinklers')
       .populate('stages');
   }
 
@@ -25,7 +36,7 @@ class GardenService {
       .populate('engineers')
       .populate('workers')
       .populate('devices')
-      .populate('sprinklers')
+      // .populate('sprinklers')
       .populate('stages');
   }
 
@@ -38,6 +49,26 @@ class GardenService {
   async deleteGarden(id) {
     return await Garden.findByIdAndDelete(id);
   }
+
+  async addUserToGarden(gardenId, userId, role) {
+    const field = role === 'engineer' ? 'engineers' : 'workers';
+    return await Garden.findByIdAndUpdate(
+      gardenId,
+      { $addToSet: { [field]: userId } }, // $addToSet يمنع التكرار
+      { new: true }
+    ).populate(['engineers', 'workers']);
+  }
+
+  async removeUserFromGarden(gardenId, userId, role) {
+    const field = role === 'engineer' ? 'engineers' : 'workers';
+    return await Garden.findByIdAndUpdate(
+      gardenId,
+      { $pull: { [field]: userId } },
+      { new: true }
+    ).populate(['engineers', 'workers']);
+  }
+
+
 }
 
 module.exports = new GardenService();

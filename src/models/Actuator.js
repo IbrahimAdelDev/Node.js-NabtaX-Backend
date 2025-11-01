@@ -38,7 +38,6 @@ const ActuatorSchema = new Schema({
   capabilities: {
     type: Object,
     default: {},
-    required: true
   },
   schedule: {
     type: ScheduleSchema,

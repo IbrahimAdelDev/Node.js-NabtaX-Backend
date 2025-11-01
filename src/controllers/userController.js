@@ -60,3 +60,15 @@ exports.deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+
+
+// 🟠 Search Users
+exports.searchUsers = async (req, res, next) => {
+  try {
+    const { query } = req.query;
+    const user = await userService.searchUsers(query);
+    res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    next(error);
+  }
+};

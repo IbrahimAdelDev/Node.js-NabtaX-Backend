@@ -10,5 +10,8 @@ router.post('/', telemetryController.createTelemetry);
 // @route   GET /api/telemetries
 // @desc    عرض كل القراءات أو حسب فلترة
 router.get('/', telemetryController.getTelemetries);
+// @route   GET /api/telemetries/device/:deviceId
+// @desc    جلب القراءات لجهاز معين
+router.get('/devices/:deviceId', telemetryController.getTelemetriesForDevice);
 
 module.exports = router;

@@ -50,3 +50,13 @@ exports.deleteDevice = async (req, res, next) => {
     next(error);
   }
 };
+
+// 🟢 Get Devices By Garden ID
+exports.getDevicesByGardenId = async (req, res, next) => {
+  try {
+    const devices = await DeviceService.getDevicesByGardenId(req.params.gardenId);
+    res.status(200).json(devices);
+  } catch (error) {
+    next(error);
+  }
+};

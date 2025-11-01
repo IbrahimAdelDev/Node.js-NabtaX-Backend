@@ -1,5 +1,5 @@
 const JWT = require('jsonwebtoken');
-const MS = require('ms');
+const ms = require('ms');
 const {
   JWT_ACCESS_SECRET,
   JWT_REFRESH_SECRET,
@@ -12,7 +12,7 @@ const generateAccessToken = (payload) => {
   return JWT.sign(payload,
     JWT_ACCESS_SECRET,
     {
-      expiresIn: Number(ACCESS_TOKEN_EXPIRES_IN)
+      expiresIn: ms(ACCESS_TOKEN_EXPIRES_IN),
     }
   );
 }
@@ -21,7 +21,7 @@ const generateRefreshToken = (payload) => {
   return JWT.sign(payload,
     JWT_REFRESH_SECRET,
     {
-      expiresIn: Number(REFRESH_TOKEN_EXPIRES_IN)
+      expiresIn: ms(REFRESH_TOKEN_EXPIRES_IN),
     }
   );
 }

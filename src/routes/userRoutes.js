@@ -15,6 +15,9 @@ router.get('/', userController.getUsers);
 // router.post('/', authMiddleware, validateUser, userController.createUser);
 router.post('/', userController.createUser);
 
+router.get('/search', userController.searchUsers);
+
+
 // GET single user by ID
 router.get('/:id', userController.getUserById);
 
@@ -23,6 +26,7 @@ router.put('/:id', userController.updateUser);
 
 // DELETE user by ID
 router.delete('/:id', userController.deleteUser);
+
 
 
 module.exports = router;

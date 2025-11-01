@@ -1,5 +1,6 @@
 // services/deviceService.js
 const Device = require('../models/Device');
+const Garden = require('../models/Garden');
 
 // 🟢 Get all devices
 async function getAllDevices() {
@@ -8,17 +9,19 @@ async function getAllDevices() {
     .populate('productId', 'name model code')
     .populate('sensors', 'type unit')
     .populate('actuators', 'name type state')
-    .populate('gardenId', 'name location');
+    .populate('gardenId', 'name location')
+    .populate('stages', 'name description startDate endDate');
 }
 
 // 🟢 Get device by ID
 async function getDeviceById(id) {
   const device = await Device.findById(id)
-    .populate('userId', 'username email')
+    .populate('ownerId', 'username email')  
     .populate('productId', 'name model code')
     .populate('sensors', 'type unit')
     .populate('actuators', 'name type state')
-    .populate('gardenId', 'name location');
+    .populate('gardenId', 'name location')
+    .populate('stages', 'name description startDate endDate');
 
   if (!device) {
     const error = new Error('Device not found');
@@ -32,7 +35,14 @@ async function getDeviceById(id) {
 // 🟢 Create new device
 async function createDevice(data) {
   const device = new Device(data);
-  return await device.save();
+  defaultDevice = await device.save();
+
+  const garden = await Garden.findById(data.gardenId);
+  if (garden) {
+    garden.devices.push(defaultDevice._id);
+    await garden.save();
+  }
+  return defaultDevice;
 }
 
 // 🟢 Update existing device
@@ -64,10 +74,21 @@ async function deleteDevice(id) {
   return device;
 }
 
+// Get Devices By Garden ID
+async function getDevicesByGardenId(gardenId) {
+  return await Device.find({ gardenId })
+    .populate('ownerId', 'username email')
+    .populate('productId', 'name model code')
+    .populate('sensors', 'type unit')
+    .populate('actuators', 'name type state')
+    .populate('gardenId', 'name location');
+}
+
 module.exports = {
   getAllDevices,
   getDeviceById,
   createDevice,
   updateDevice,
   deleteDevice,
+  getDevicesByGardenId,
 };

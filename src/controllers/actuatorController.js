@@ -1,5 +1,6 @@
 // controllers/actuatorController.js
 const ActuatorService = require('../services/actuatorService');
+const { aedes } = require('../mqtt/mqttBroker');
 
 // 🟢 Get all
 exports.getAllActuators = async (req, res, next) => {
@@ -34,7 +35,7 @@ exports.createActuator = async (req, res, next) => {
 // 🟢 Update
 exports.updateActuator = async (req, res, next) => {
   try {
-    const actuator = await ActuatorService.updateActuator(req.params.id, req.body);
+    const actuator = await ActuatorService.updateActuator(req.params.id, req.body, aedes);
     res.status(200).json(actuator);
   } catch (error) {
     next(error);
@@ -54,8 +55,29 @@ exports.deleteActuator = async (req, res, next) => {
 // 🟢 Update Schedule
 exports.updateActuatorSchedule = async (req, res, next) => {
   try {
-    const actuator = await ActuatorService.updateActuatorSchedule(req.params.id, req.body.schedule);
+    const actuator = await ActuatorService.updateActuatorSchedule(req.params.id, req.body.schedule, aedes);
     res.status(200).json(actuator);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// 🟢 Get Actuators By Device ID
+exports.getActuatorsByDeviceId = async (req, res, next) => {
+  try {
+    const actuators = await ActuatorService.getActuatorsByDeviceId(req.params.deviceId);
+    res.status(200).json(actuators);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// 🟢 Get Actuators By Stage ID
+exports.getActuatorsByStageId = async (req, res, next) => {
+  try {
+    const actuators = await ActuatorService.getActuatorsByStageId(req.params.stageId);
+    res.status(200).json(actuators);
   } catch (error) {
     next(error);
   }

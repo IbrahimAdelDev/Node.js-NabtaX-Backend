@@ -1,5 +1,7 @@
 // services/sensorService.js
 const Sensor = require('../models/Sensor');
+const Device = require('../models/Device');
+const Stage = require('../models/Stage');
 
 // 🟢 Get all sensors
 async function getAllSensors() {
@@ -25,7 +27,23 @@ async function getSensorById(id) {
 // 🟢 Create sensor
 async function createSensor(data) {
   const sensor = new Sensor(data);
-  return await sensor.save();
+  const savedSensor = await sensor.save();
+
+  // Update Device to include this Sensor
+  const device = await Device.findById(data.deviceId);
+  if (device) {
+    device.sensors.push(savedSensor._id);
+    await device.save();
+  }
+
+  // Update Stage to include this Sensor
+  const stage = await Stage.findById(data.stageId); 
+  if (stage) {
+    stage.sensors.push(savedSensor._id);
+    await stage.save();
+  }
+
+  return savedSensor;
 }
 
 // 🟢 Update sensor
@@ -54,10 +72,26 @@ async function deleteSensor(id) {
   return sensor;
 }
 
+// get sensor by device ID
+async function getSensorsByDeviceId(deviceId) {
+  return await Sensor.find({ deviceId })
+    .populate('deviceId', 'name _id')
+    .populate('stageId', 'name _id');
+}
+
+// get sensor by stage ID
+async function getSensorsByStageId(stageId) {
+  return await Sensor.find({ stageId })
+    .populate('deviceId', 'name _id')
+    .populate('stageId', 'name _id');
+}
+
 module.exports = {
   getAllSensors,
   getSensorById,
   createSensor,
   updateSensor,
   deleteSensor,
+  getSensorsByDeviceId,
+  getSensorsByStageId,
 };

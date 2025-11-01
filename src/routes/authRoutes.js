@@ -16,7 +16,7 @@ router.post('/login', [
   body('password').notEmpty().withMessage('Password is required'),
 ], authController.login);
 
-router.post('/refresh', authController.refresh);
+router.post('/verify-token', authController.refresh);
 
 router.post('/logout', authMiddleware, authController.logout);
 

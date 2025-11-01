@@ -50,3 +50,23 @@ exports.deleteSensor = async (req, res, next) => {
     next(error);
   }
 };
+
+// 🟢 Get Sensors By Device ID
+exports.getSensorsByDeviceId = async (req, res, next) => {
+  try {
+    const sensors = await SensorService.getSensorsByDeviceId(req.params.deviceId);
+    res.status(200).json(sensors);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// 🟢 Get Sensors By Stage ID
+exports.getSensorsByStageId = async (req, res, next) => {
+  try {
+    const sensors = await SensorService.getSensorsByStageId(req.params.stageId);
+    res.status(200).json(sensors);
+  } catch (error) {
+    next(error);
+  }
+};

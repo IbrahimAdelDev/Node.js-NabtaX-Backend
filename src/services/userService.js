@@ -70,10 +70,20 @@ async function deleteUser(id) {
   return user;
 }
 
+
+// search users by name or email
+async function searchUsers(query) {
+  const regex = new RegExp(query, 'i'); // case-insensitive search
+  return await User.find({
+    $or: [{ name: regex }, { email: regex }],
+  }).select('-hashPassword');
+}
+
 module.exports = {
   createUser,
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
+  searchUsers,
 };

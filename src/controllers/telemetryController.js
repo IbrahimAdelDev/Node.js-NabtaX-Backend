@@ -36,7 +36,20 @@ const getTelemetries = async (req, res) => {
   }
 };
 
+// get telemetries for a device
+const getTelemetriesForDevice = async (req, res) => {
+  try {
+    const { deviceId } = req.params;
+    const data = await telemetryService.getLastTelemetriesForDevice(deviceId);
+    res.status(200).json({ success: true, count: data.length, data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error fetching telemetries', error: error.message });
+  }
+};
+
 module.exports = {
   createTelemetry,
   getTelemetries,
+  getTelemetriesForDevice,
 };

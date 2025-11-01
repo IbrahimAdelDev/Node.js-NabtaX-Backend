@@ -52,8 +52,8 @@ const login = async ({ email, password, deviceUUID }) => {
   const refreshExpiry = new Date(Date.now() + ms(REFRESH_TOKEN_EXPIRES_IN));
 
   const refreshTokenDoc = await RefreshToken.findOneAndUpdate(
-    { user: user._id, deviceUUID },
-    { token: refreshToken, expiresAt: refreshExpiry },
+    { userId: user._id, deviceUUID },
+    { token: refreshToken, expires: refreshExpiry },
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
 
@@ -91,7 +91,7 @@ const refresh = async (oldRefreshToken, deviceUUID) => {
     throw new Error('Refresh token revoked');
   }
 
-  if (tokenDoc?.expiresAt && tokenDoc?.expiresAt < new Date()) {
+  if (tokenDoc?.expires && tokenDoc?.expires < new Date()) {
     await RefreshToken.deleteOne({ _id: tokenDoc._id });
     logger.warn('Refresh token expired, please log in again');
     throw new Error('Refresh token expired, please log in again');
@@ -102,14 +102,16 @@ const refresh = async (oldRefreshToken, deviceUUID) => {
   const newAccessToken = generateAccessToken(newPayload);
   const newRefreshToken = generateRefreshToken(newPayload);
 
+  console.error('Generated new refresh token during rotation:', newRefreshToken);
+
   const refreshExpiry = new Date(Date.now() + ms(REFRESH_TOKEN_EXPIRES_IN));
   tokenDoc.token = newRefreshToken;
-  tokenDoc.expiresAt = refreshExpiry;
+  tokenDoc.expires = refreshExpiry;
   await tokenDoc.save();
 
   return {
     accessToken: newAccessToken,
-    refreshToken: newRefreshToken
+    newRefreshToken: newRefreshToken
   };
 };
 

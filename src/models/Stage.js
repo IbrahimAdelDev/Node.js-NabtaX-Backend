@@ -48,7 +48,22 @@ const StageSchema = new Schema({
   plants: {
     type: [PlantSchema],
     default: []
-  }
+  },
+  // 🧠 الحساسات Sensors المرتبطة بالجهاز
+  sensors: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Sensor',
+    },
+  ],
+
+  // ⚙️ المشغلات (Actuators) المرتبطة بالجهاز
+  actuators: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Actuator',
+    },
+  ],
 }, { timestamps: true });
 StageSchema.index({ deviceId: 1 });
 
