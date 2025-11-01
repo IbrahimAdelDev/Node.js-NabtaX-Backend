@@ -16,8 +16,8 @@ const ensureTelemetryTimeSeriesCollection = async () => {
 
     // Create indexes
     await mongoose.connection.db.collection('telemetries').createIndex({ 'metadata.deviceId': 1 });
-    await mongoose.connection.db.collection('telemetries').createIndex({ 'metadata.stageId': 1 });
-    await mongoose.connection.db.collection('telemetries').createIndex({ 'metadata.sensorId': 1 });
+    // await mongoose.connection.db.collection('telemetries').createIndex({ 'metadata.stageId': 1 });
+    // await mongoose.connection.db.collection('telemetries').createIndex({ 'metadata.sensorId': 1 });
     await mongoose.connection.db.collection('telemetries').createIndex({ timestamp: 1 });
 
     console.log('✅ Time-series collection "telemetries" created');

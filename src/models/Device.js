@@ -94,7 +94,6 @@ const DeviceSchema = new Schema(
       type: String,
       enum: ['active', 'inactive', 'maintenance', 'decommissioned'],
       default: 'active',
-      index: true,
     },
 
     // 🕒 آخر اتصال بالجهاز (مفيد للـ monitoring)
@@ -107,8 +106,9 @@ const DeviceSchema = new Schema(
 );
 
 // ✅ Indexes لتحسين الاستعلامات الشائعة
-DeviceSchema.index({ serial: 1 });
+// DeviceSchema.index({ serial: 1 });
 DeviceSchema.index({ ownerId: 1, gardenId: 1 });
 DeviceSchema.index({ status: 1 });
 
 module.exports = mongoose.model('Device', DeviceSchema);
+

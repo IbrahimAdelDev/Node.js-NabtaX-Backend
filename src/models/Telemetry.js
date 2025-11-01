@@ -31,13 +31,11 @@ const TelemetrySchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Stage',
     required: true,
-    index: true
   },
   sensorId: {
     type: Schema.Types.ObjectId,
     ref: 'Sensor',
     required: true,
-    index: true
   },
   metadata: {
     deviceId: {
@@ -70,3 +68,4 @@ TelemetrySchema.index({ 'stageId': 1 });
 
 // ✅ نموذج محدد باسم telemetries (collection ثابت)
 module.exports = mongoose.model('Telemetry', TelemetrySchema, 'telemetries');
+
